@@ -1,0 +1,19 @@
+# ninja log v5
+1011	1105	1761900990046793288	/Users/elbeksattorov/Documents/AC-Level-For-Order/HorrorQuest/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1h3ypin1/obj/arm64-v8a/libgame.so	a270e3e3e0b88cb9
+0	1010	1761900989950540266	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	3257c6eda3d5ad06
+1	923	1761900989864036645	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	b14b8b235c74b22c
+3	844	1761900989784517089	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	63e653e202b2d3a2
+1	799	1761900989738578629	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	9427f5b6182d93ec
+2	777	1761900989716609198	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	2e7cc4483ddc723d
+2	756	1761900989693885069	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	a9316b681ba57acb
+0	771	1761900989709309512	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	20da0f62d51e5b38
+1	754	1761900989691354272	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	ccb70301d151245b
+4	1331	1761914657164891218	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	a9316b681ba57acb
+4	1333	1761914657167626175	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	ccb70301d151245b
+3	1339	1761914657175294405	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	20da0f62d51e5b38
+4	1342	1761914657180047547	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	2e7cc4483ddc723d
+3	1359	1761914657197391818	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	9427f5b6182d93ec
+5	1388	1761914657226591652	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	63e653e202b2d3a2
+4	1490	1761914657329049558	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	b14b8b235c74b22c
+3	1549	1761914657386849376	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	3257c6eda3d5ad06
+1549	1763	1761914657602770978	/Users/elbeksattorov/Documents/AC-Level-For-Order/HorrorQuest/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1h3ypin1/obj/arm64-v8a/libgame.so	a270e3e3e0b88cb9

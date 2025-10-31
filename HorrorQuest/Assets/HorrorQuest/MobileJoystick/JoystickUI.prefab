@@ -792,6 +792,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4405c44eced288d4889fe9dff7a1f85a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraSensitivity: 100
+  moveSensitivity: 100
   playerJoystick:
     boundary: {fileID: 7728940614724735616}
     canvasGroup: {fileID: 7728940614724735676}

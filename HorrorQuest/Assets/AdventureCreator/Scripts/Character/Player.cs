@@ -24,22 +24,28 @@ namespace AC
 
 		#region Variables
 
+		/** The Player's jump animation, if using Legacy animation */
 		public AnimationClip jumpAnim;
+		/** The DetectHotspots component used if SettingsManager's hotspotDetection = HotspotDetection.PlayerVicinity */
 		public DetectHotspots hotspotDetector;
 		protected int id = -1;
 		protected bool lockedPath;
 		protected bool lockedPathCanReverse;
 		protected float tankTurnFloat;
+		/** True if running has been toggled */
 		public bool toggleRun;
 
 		private Transform directMovementTargetLock;
 
+		/** The enabled state of Player's ability to head-turn towards Hotspots. */
 		public bool LockHotspotHeadTurning { get; set; }
 		protected Transform firstPersonCameraTransform;
 		protected FirstPersonCamera firstPersonCamera;
 		protected bool prepareToJump;
+		/** If True, and player-switching is enabled, then the enabled state of attached Hotspots will be synced with the player's active state */
 		public bool autoSyncHotspotState = true;
 
+		/** The player's jump speed */
 		public float jumpSpeed = 4f;
 
 		protected SkinnedMeshRenderer[] skinnedMeshRenderers;
@@ -52,44 +58,19 @@ namespace AC
 		public bool freeAimLocked = false;
 		public bool jumpingLocked = false;
 
+
 		#if UNITY_2019_2_OR_NEWER
 		public bool autoStickToNavMesh = false;
 		private PolygonCollider2D[] autoStickPolys;
 		#endif
 
-		// ======= Crouch additions =======
-
-		/** Enable crouch feature */
-		[Header("Crouch")]
-		public bool crouchEnabled = true;
-
-		/** If true, pressing Crouch toggles crouch on/off. If false, crouch only while the button is held. */
-		public bool crouchIsToggle = true;
-
-		/** Movement speed multiplier while crouching (applied to targetSpeed). */
-		[Range(0.1f, 1f)] public float crouchSpeedMultiplier = 0.5f;
-
-		/** CharacterController/CapsuleCollider height multiplier while crouching. */
-		[Range(0.4f, 0.95f)] public float crouchHeightMultiplier = 0.6f;
-
-		/** Optional Animator boolean parameter name to set while crouching (leave blank to ignore). */
-		public string crouchAnimatorBool = "Crouch";
-
-		/** Optional additional local Y-offset for FirstPersonCamera while crouching. */
-		public float crouchCameraYOffset = -0.35f;
-
-		private bool isCrouching = false;
-
-		// originals to restore on stand-up
-		private float _origControllerHeight;
-		private Vector3 _origControllerCenter;
-
-		private float _origCapsuleHeight;
-		private Vector3 _origCapsuleCenter;
-
-		private Vector3 _origFpCamLocalPos;
-
 		#endregion
+
+#if UNITY_ANDROID || UNITY_IOS
+		private const float MobileTurnMultiplier = 2.0f; // подбери 1.5–3.0
+#else
+private const float MobileTurnMultiplier = 1.0f;
+#endif
 
 
 		#region UnityStandards
@@ -113,23 +94,6 @@ namespace AC
 				if (firstPersonCamera)
 				{
 					firstPersonCameraTransform = firstPersonCamera.transform;
-					_origFpCamLocalPos = firstPersonCameraTransform.localPosition;
-				}
-			}
-
-			// cache original collider values (if present)
-			if (_characterController)
-			{
-				_origControllerHeight = _characterController.height;
-				_origControllerCenter = _characterController.center;
-			}
-			else
-			{
-				var capsule = GetComponent<CapsuleCollider>();
-				if (capsule)
-				{
-					_origCapsuleHeight = capsule.height;
-					_origCapsuleCenter = capsule.center;
 				}
 			}
 
@@ -137,7 +101,7 @@ namespace AC
 
 			if (GetAnimEngine () != null && KickStarter.settingsManager && KickStarter.settingsManager.hotspotDetection == HotspotDetection.PlayerVicinity && GetAnimEngine ().isSpriteBased && hotspotDetector)
 			{
-				if (spriteChild && hotspotDetector.transform == spriteChild) {}
+				if (spriteChild && hotspotDetector.transform == spriteChild) {} // OK
 				else if (turn2DCharactersIn3DSpace)
 				{
 					if (hotspotDetector.transform == transform)
@@ -193,32 +157,6 @@ namespace AC
 				if (!jumpingLocked)
 				{
 					jumped = Jump ();
-				}
-			}
-
-			// ======= Crouch input handling =======
-			if (crouchEnabled && KickStarter.stateHandler.IsInGameplay () && motionControl == MotionControl.Automatic && !KickStarter.stateHandler.MovementIsOff)
-			{
-				bool crouchDown = KickStarter.playerInput.InputGetButtonDown("Crouch");
-				bool crouchHeld = KickStarter.playerInput.InputGetButton("Crouch");
-				bool crouchUp   = KickStarter.playerInput.InputGetButtonUp("Crouch");
-
-				if (crouchIsToggle)
-				{
-					if (crouchDown)
-					{
-						SetCrouch (!isCrouching);
-					}
-				}
-				else
-				{
-					if (crouchDown) SetCrouch (true);
-					if (crouchUp)   SetCrouch (false);
-					// if control lost (e.g., menu), auto-release
-					if (!crouchHeld && isCrouching && KickStarter.stateHandler.gameState != GameState.Normal)
-					{
-						SetCrouch (false);
-					}
 				}
 			}
 
@@ -300,34 +238,47 @@ namespace AC
 
 		#region PublicFunctions
 	
-		public void TankTurnLeft (float intensity = 1f)
+		/**
+		 * <summary>Makes the Player spot-turn left during gameplay. This needs to be called every frame of the turn.</summary>
+		 * <param name = "intensity">The relative speed of the turn. Set this to the value of the input axis for smooth movement.</param>
+		 */
+		public void TankTurnLeft (float intensity = 10f)
 		{
-			Quaternion rot = TransformRotation * Quaternion.Euler (-intensity * turnSpeed * Vector3.up * 60f * Time.deltaTime);
-			SetRotation (rot);
-
+			float k = intensity * turnSpeed * 60f * Time.deltaTime * MobileTurnMultiplier;
+			Quaternion rot = TransformRotation * Quaternion.Euler(-k * Vector3.up);
+			SetRotation(rot);
 			tankTurning = true;
 			turnFloat = tankTurnFloat = -intensity;
 		}
 		
-		public void TankTurnRight (float intensity = 1f)
-		{
-			Quaternion rot = TransformRotation * Quaternion.Euler (intensity * turnSpeed * Vector3.up * 60f * Time.deltaTime);
-			SetRotation (rot);
 
+		/**
+		 * <summary>Makes the Player spot-turn right during gameplay. This needs to be called every frame of the turn.</summary>
+		 * <param name = "intensity">The relative speed of the turn. Set this to the value of the input axis for smooth movement.</param>
+		 */
+		public void TankTurnRight (float intensity = 10f)
+		{
+			float k = intensity * turnSpeed * 60f * Time.deltaTime * MobileTurnMultiplier;
+			Quaternion rot = TransformRotation * Quaternion.Euler(k * Vector3.up);
+			SetRotation(rot);
 			tankTurning = true;
 			turnFloat = tankTurnFloat = intensity;
 		}
 
+
+		/** Stops the Player from re-calculating pathfinding calculations. */
 		public void CancelPathfindRecalculations ()
 		{
 			pathfindUpdateTime = 0f;
 		}
+
 
 		public override void StopTankTurning ()
 		{
 			lookDirection = TransformForward;
 			tankTurning = false;
 		}
+
 
 		public override float GetTurnFloat ()
 		{
@@ -338,10 +289,12 @@ namespace AC
 			return base.GetTurnFloat ();
 		}
 
+
 		public void ForceTurnFloat (float _value)
 		{
 			turnFloat = _value;
 		}
+
 
 		public override bool IsCapableOfJumping ()
 		{
@@ -356,8 +309,12 @@ namespace AC
 			#endif
 		}
 
+
 		/**
-		 * Causes the Player to jump, so long as a Rigidbody or Character Controller component is attached.
+		 * <summary>Causes the Player to jump, so long as a Rigidbody or Character Controller component is attached.</summary>
+		 * <param name = "mustBeGrounded">If True, the Player must currently be touching the ground</param>
+		 * <param name = "mustNotBeMidJump">If True, the Player must not currently be mid-jump</param>
+		 * <return>True if the attempt to jump was succesful</returns>
 		 */
 		public bool Jump (bool mustBeGrounded = true, bool mustNotBeMidJump = true)
 		{
@@ -431,6 +388,7 @@ namespace AC
 			return false;
 		}
 
+		
 		public override void EndPath ()
 		{
 			if (lockedPath)
@@ -441,6 +399,8 @@ namespace AC
 			base.EndPath ();
 		}
 
+
+		/** Reverses which way the Player is moving along a constrained Path during gameplay */
 		public void ReverseDirectPathDirection ()
 		{
 			if (lockedPath && lockedPathCanReverse)
@@ -468,8 +428,18 @@ namespace AC
 			}
 		}
 
+
+		/**
+		 * <summary>Locks the Player to a Paths object during gameplay, if using Direct movement.
+		 * This allows the designer to constrain the Player's movement to a Path, even though they can move freely along it.</summary>
+		 * <param name = "pathOb">The Paths to lock the Player to</param>
+		 * <param name="canReverse">If True, the Player can move in both directions along the Path</param>
+		 * <param name="pathSnapping">The type of snapping to enforce when first placing the Player over the Path</param>
+		 * <param name="startingNode">If pathSnapping = PathSnapping.SnapToNode, the node index to snap to</param>
+		 */
 		public void SetLockedPath (Paths pathOb, bool canReverse = false, PathSnapping pathSnapping = PathSnapping.SnapToStart, int startingNode = 0)
 		{
+			// Ignore if using "point and click" or first person methods
 			if (KickStarter.settingsManager.movementMethod == MovementMethod.Direct || KickStarter.settingsManager.movementMethod == MovementMethod.FirstPerson)
 			{
 				lockedPath = true;
@@ -578,14 +548,34 @@ namespace AC
 			}
 		}
 
-		public bool IsLockedToPath () { return lockedPath; }
 
+		/**
+		 * <summary>Checks if the Player is constrained to move along a Paths object during gameplay.</summary>
+		 * <returns>True if the Player is constrained to move along a Paths object during gameplay</summary>
+		 */
+		public bool IsLockedToPath ()
+		{
+			return lockedPath;
+		}
+
+
+		/**
+		 * <summary>Checks if the Player is prevented from being moved directly in all four directions.</summary>
+		 * <returns>True if the Player is prevented from being moved directly in all four direction</returns>
+		 */
 		public bool AllDirectionsLocked ()
 		{
-			if (downMovementLocked && upMovementLocked && leftMovementLocked && rightMovementLocked) return true;
+			if (downMovementLocked && upMovementLocked && leftMovementLocked && rightMovementLocked)
+			{
+				return true;
+			}
 			return false;
 		}
 
+				
+		/**
+		 * Checks if the Player's FirstPersonCamera is looking up or down.
+		 */
 		public bool IsTilting ()
 		{
 			if (firstPersonCamera)
@@ -595,6 +585,10 @@ namespace AC
 			return false;
 		}
 
+
+		/**
+		 * Gets the angle by which the Player's FirstPersonCamera is looking up or down, with negative values looking upward.
+		 */
 		public float GetTilt ()
 		{
 			if (firstPersonCamera)
@@ -604,9 +598,18 @@ namespace AC
 			return 0f;
 		}
 		
+
+		/**
+		 * <summary>Sets the tilt of a first-person camera.</summary>
+		 * <param name = "lookAtPosition">The point in World Space to tilt the camera towards</param>
+		 * <param name = "isInstant">If True, the camera will be rotated instantly</param>
+		 */
 		public void SetTilt (Vector3 lookAtPosition, bool isInstant)
 		{
-			if (firstPersonCameraTransform == null || firstPersonCamera == null) return;
+			if (firstPersonCameraTransform == null || firstPersonCamera == null)
+			{
+				return;
+			}
 			
 			if (isInstant)
 			{
@@ -616,21 +619,44 @@ namespace AC
 			}
 			else
 			{
+				// Base the speed of tilt change on how much horizontal rotation is needed
+				
 				Quaternion oldRotation = firstPersonCameraTransform.rotation;
 				firstPersonCameraTransform.LookAt (lookAtPosition);
 				float targetTilt = firstPersonCameraTransform.localEulerAngles.x;
 				firstPersonCameraTransform.rotation = oldRotation;
-				if (targetTilt > 180) targetTilt = targetTilt - 360;
+				if (targetTilt > 180)
+				{
+					targetTilt = targetTilt - 360;
+				}
 				firstPersonCamera.SetPitch (targetTilt, false);
 			}
 		}
 
+
+		/**
+		 * <summary>Sets the tilt of a first-person camera.</summary>
+		 * <param name = "pitchAngle">The angle to tilt the camera towards, with 0 being horizontal, positive looking downard, and negative looking upward</param>
+		 * <param name = "isInstant">If True, the camera will be rotated instantly</param>
+		 */
 		public void SetTilt (float pitchAngle, bool isInstant)
 		{
-			if (firstPersonCamera == null) return;
+			if (firstPersonCamera == null)
+			{
+				return;
+			}
+			
 			firstPersonCamera.SetPitch (pitchAngle, isInstant);
 		}
 
+
+		/**
+		 * <summary>Controls the head-facing position.</summary>
+		 * <param name = "_headTurnTarget">The Transform to face</param>
+		 * <param name = "_headTurnTargetOffset">The position offset of the Transform</param>
+		 * <param name = "isInstant">If True, the head will turn instantly</param>
+		 * <param name = "_headFacing">What the head should face (Manual, Hotspot, None)</param>
+		 */
 		public override void SetHeadTurnTarget (Transform _headTurnTarget, Vector3 _headTurnTargetOffset, bool isInstant, HeadFacing _headFacing = HeadFacing.Manual)
 		{
 			if (!IsActivePlayer ())
@@ -649,6 +675,12 @@ namespace AC
 			}
 		}
 
+
+		/**
+		 * <summary>Updates a PlayerData class with its own variables that need saving.</summary>
+		 * <param name = "playerData">The original PlayerData class</param>
+		 * <returns>The updated PlayerData class</returns>
+		 */
 		public PlayerData SaveData (PlayerData playerData)
 		{
 			playerData.playerID = ID;
@@ -670,15 +702,20 @@ namespace AC
 			playerData.playerRunLock = (int) runningLocked;
 			playerData.playerFreeAimLock = freeAimLocked;
 
+			// Animation clips
 			if (GetAnimEngine () != null)
 			{
 				playerData = GetAnimEngine ().SavePlayerData (playerData, this);
 			}
 						
+			// Portrait graphic
 			playerData.playerPortraitGraphic = AssetLoader.GetAssetInstanceID (portraitIcon.texture);
+
+			// Speech label
 			playerData.playerSpeechLabel = GetName ();
 			playerData.playerDisplayLineID = displayLineID;
 
+			// Rendering
 			playerData.playerLockDirection = lockDirection;
 			playerData.playerLockScale = lockScale;
 			if (spriteChild && spriteChild.GetComponent <FollowSortingMap>())
@@ -749,6 +786,7 @@ namespace AC
 			
 			playerData.playerIgnoreGravity = ignoreGravity;
 			
+			// Head target
 			playerData.playerLockHotspotHeadTurning = LockHotspotHeadTurning;
 			if (headFacing == HeadFacing.Manual && headTurnTarget)
 			{
@@ -802,6 +840,7 @@ namespace AC
 				playerData.customSortingMapID = 0;
 			}
 
+			// Inactive Player follow
 			if (followTarget && !IsActivePlayer ())
 			{
 				if (!followTargetIsPlayer)
@@ -857,6 +896,7 @@ namespace AC
 
 			playerData.spriteDirectionData = spriteDirectionData.SaveData ();
 
+			// Remember scripts
 			if (!IsLocalPlayer () && gameObject.activeInHierarchy)
 			{
 				playerData = KickStarter.levelStorage.SavePlayerData (this, playerData);
@@ -865,8 +905,21 @@ namespace AC
 			return playerData;
 		}
 
-		public bool IsLocalPlayer () { return (ID <= -2); }
 
+		/** 
+		 * <summary>Checks if the player is local to the scene, and not from a prefab.</summary>
+		 * <returns>True if the player is local to the scene</returns>
+		 */
+		public bool IsLocalPlayer ()
+		{
+			return (ID <= -2);
+		}
+
+
+		/**
+		 * <summary>Updates its own variables from a PlayerData class.</summary>
+		 * <param name = "playerData">The PlayerData class to load from</param>
+		 */
 		public IEnumerator LoadData (PlayerData playerData)
 		{
 			upMovementLocked = playerData.playerUpLock;
@@ -887,10 +940,26 @@ namespace AC
 			walkSpeedScale = playerData.playerWalkSpeed;
 			runSpeedScale = playerData.playerRunSpeed;
 			
+			// Animation clips
 			GetAnimEngine ().LoadPlayerData (playerData, this);
 
+			/*#if AddressableIsPresent
+			if (KickStarter.settingsManager.saveAssetReferencesWithAddressables)
+			{
+				StartCoroutine (LoadDataFromAddressables (playerData));
+			}
+			else
+			#endif
+			{
+				walkSound = AssetLoader.RetrieveAsset (walkSound, playerData.playerWalkSound);
+				runSound = AssetLoader.RetrieveAsset (runSound, playerData.playerRunSound);
+				portraitIcon.ReplaceTexture (AssetLoader.RetrieveAsset (portraitIcon.texture, playerData.playerPortraitGraphic));
+			}*/
+
+			// Speech label
 			SetName (playerData.playerSpeechLabel, playerData.playerDisplayLineID);
 			
+			// Rendering
 			lockDirection = playerData.playerLockDirection;
 			lockScale = playerData.playerLockScale;
 			if (spriteChild && spriteChild.GetComponent <FollowSortingMap>())
@@ -935,6 +1004,7 @@ namespace AC
 				}
 			}
 
+			// Inactive following
 			AC.Char charToFollow = null;
 			if (playerData.followTargetID != 0)
 			{
@@ -954,6 +1024,7 @@ namespace AC
 				StopFollowing ();
 			}
 
+			// Active path
 			Halt ();
 
 			if (!playerData.inCustomCharState)
@@ -1007,6 +1078,7 @@ namespace AC
 				}
 			}
 			
+			// Previous path
 			if (playerData.lastPlayerActivePath != 0)
 			{
 				Paths savedPath = ConstantID.GetComponent <Paths> (playerData.lastPlayerActivePath);
@@ -1021,6 +1093,7 @@ namespace AC
 				firstPersonCamera.SetPitch (playerData.fpCameraPitch);
 			}
 
+			// Head target
 			LockHotspotHeadTurning = playerData.playerLockHotspotHeadTurning;
 			if (playerData.isHeadTurning)
 			{
@@ -1070,6 +1143,7 @@ namespace AC
 
 			_spriteDirectionData.LoadData (playerData.spriteDirectionData);
 
+			// Hands
 			if ((playerData.leftHandSceneItemConstantID != 0 || playerData.rightHandSceneItemConstantID != 0) && playerData.attachmentPointDatas.Length == 0)
 			{
 				playerData.attachmentPointDatas = new AttachmentPointData[2] { new AttachmentPointData (0, playerData.leftHandSceneItemConstantID), new AttachmentPointData (1, playerData.rightHandSceneItemConstantID) };
@@ -1104,9 +1178,13 @@ namespace AC
 				}
 			}
 
+			// Remember scripts
 			if (IsLocalPlayer ())
 			{
-				if (GetAnimator ()) GetAnimator ().Update (0f);
+				if (GetAnimator ())
+				{
+					GetAnimator ().Update (0f);
+				}
 			}
 			else
 			{
@@ -1124,6 +1202,7 @@ namespace AC
 			}
 		}
 
+
 		private AttachmentPoint GetAttachmentPoint (int ID)
 		{
 			if (attachmentPoints == null) return null;
@@ -1134,6 +1213,8 @@ namespace AC
 			return null;
 		}
 
+
+		/** Hides the player's SkinnedMeshRenderers, if any exist */
 		public virtual void Hide ()
 		{
 			foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
@@ -1142,18 +1223,18 @@ namespace AC
 			}
 		}
 
+
+		/** Shows the player's SkinnedMeshRenderers, if any exist */
 		public virtual void Show ()
 		{
-			foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
-			{
-				skinnedMeshRenderers[0].enabled = true;
-			}
 			foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers)
 			{
 				skinnedMeshRenderer.enabled = true;
 			}
 		}
 
+
+		/** Removes the Player GameObject from the scene */
 		public void RemoveFromScene (bool immediately = false)
 		{
 			if (KickStarter.eventManager)
@@ -1195,6 +1276,8 @@ namespace AC
 			}
 		}
 
+
+		/** Returns True if the Player is inactive, but following the active Player across scenes */
 		public bool IsFollowingActivePlayerAcrossScenes ()
 		{
 			if (followAcrossScenes && followTargetIsPlayer)
@@ -1204,6 +1287,7 @@ namespace AC
 			return false;
 		}
 
+
 		public override string ToString ()
 		{
 			string prefix = IsActivePlayer () ? "Active Player " : "Player ";
@@ -1212,32 +1296,6 @@ namespace AC
 				return prefix + speechLabel;
 			}
 			return prefix + name;
-		}
-
-		// ======= Crouch public API =======
-
-		/** Returns true if player is currently crouching. */
-		public bool IsCrouching () => isCrouching;
-
-		/** Force-set crouch state (performs safety ceiling check when standing up). */
-		public void SetCrouch (bool value)
-		{
-			if (!crouchEnabled) return;
-			if (value == isCrouching) return;
-
-			if (!value)
-			{
-				// want to stand up: ensure we have headroom
-				if (!HasHeadroomToStand ())
-				{
-					return;
-				}
-			}
-
-			isCrouching = value;
-			ApplyCrouchToColliders (isCrouching);
-			ApplyCrouchToCamera (isCrouching);
-			ApplyCrouchToAnimator (isCrouching);
 		}
 
 		#endregion
@@ -1269,6 +1327,7 @@ namespace AC
 				float sqrDist = (newPosition - transform.position).sqrMagnitude;
 				if (sqrDist == 0f)
 				{
+					// Already inside
 					return;
 				}
 
@@ -1287,6 +1346,7 @@ namespace AC
 			#endif
 		}
 
+
 		protected override bool CanBeDirectControlled ()
 		{
 			if (KickStarter.stateHandler.gameState == GameState.Normal)
@@ -1299,6 +1359,7 @@ namespace AC
 			return false;
 		}
 		
+
 		protected bool IsMovingToHotspot ()
 		{
 			if (KickStarter.playerInteraction && KickStarter.playerInteraction.GetHotspotMovingTo ())
@@ -1309,13 +1370,16 @@ namespace AC
 			return false;
 		}
 
+
 		protected void OnSetPlayer (Player player)
 		{
 			AutoSyncHotspot ();
 		}
 
+
 		protected void OnBeforeLoading (SaveFile saveFile)
 		{
+			// Delete held objects that get saved
 			for (int i = 0; i < attachmentPoints.Length; i++)
 			{
 				if (attachmentPoints[i].heldObject)
@@ -1329,10 +1393,12 @@ namespace AC
 			}
 		}
 
+
 		protected void OnInitialiseScene ()
 		{
 			autoStickPolys = null;
 		}
+
 
 		protected void AutoSyncHotspot ()
 		{
@@ -1349,6 +1415,7 @@ namespace AC
 			}
 		}
 
+
 		protected override void Accelerate ()
 		{
 			if (!IsActivePlayer ())
@@ -1358,12 +1425,6 @@ namespace AC
 			}
 
 			float targetSpeed = GetTargetSpeed ();
-
-			// slow down while crouched
-			if (isCrouching)
-			{
-				targetSpeed *= Mathf.Clamp(crouchSpeedMultiplier, 0.1f, 1f);
-			}
 
 			if (AccurateDestination () && WillStopAtNextNode ())
 			{
@@ -1385,6 +1446,7 @@ namespace AC
 
 		#region GetSet
 
+		/** Assigns or sets the FirstPersonCamera Transform. This is done automatically in regular First Person mode, but must be set manually if using a custom controller, eg. Ultimate FPS. */
 		public Transform FirstPersonCamera
 		{
 			get
@@ -1401,6 +1463,7 @@ namespace AC
 			}
 		}
 
+
 		public FirstPersonCamera FirstPersonCameraComponent
 		{
 			get
@@ -1413,6 +1476,8 @@ namespace AC
 			}
 		}
 
+
+		/** The Player's collection of Inventory items */
 		public InvCollection Inventory
 		{
 			get
@@ -1425,22 +1490,51 @@ namespace AC
 			}
 		}
 
-		public override bool IsPlayer { get { return true; } }
 
-		public override bool IsActivePlayer () { return this == KickStarter.player; }
+		public override bool IsPlayer
+		{
+			get
+			{
+				return true;
+			}
+		}
 
+
+		public override bool IsActivePlayer ()
+		{
+			return this == KickStarter.player;
+		}
+
+
+		/** If set while Movement method is Direct, the Player will face this Transform at all times */
 		public Transform DirectMovementTargetLock
 		{
-			get { return directMovementTargetLock; }
-			set { directMovementTargetLock = value; }
+			get
+			{
+				return directMovementTargetLock;
+			}
+			set
+			{
+				directMovementTargetLock = value;
+			}
 		}
 
+
+		/** The Player's ID number, used to keep track of which Player is currently controlled */
 		public int ID
 		{
-			get { return id; }
-			set { StartCoroutine (SetID (value)); }
+			get
+			{
+				return id;
+			}
+			set
+			{
+				StartCoroutine (SetID (value));
+			}
 		}
 
+		
+		/** Assigns a new ID for the Player */
 		public IEnumerator SetID (int value)
 		{
 			id = value;
@@ -1458,92 +1552,6 @@ namespace AC
 
 		#endregion
 
-
-		#region Crouch internals
-
-		private void ApplyCrouchToAnimator (bool crouched)
-		{
-			if (string.IsNullOrEmpty(crouchAnimatorBool)) return;
-			var anim = GetAnimator();
-			if (anim) anim.SetBool(crouchAnimatorBool, crouched);
-		}
-
-		private void ApplyCrouchToCamera (bool crouched)
-		{
-			if (!firstPersonCameraTransform) return;
-
-			if (crouched)
-			{
-				firstPersonCameraTransform.localPosition = _origFpCamLocalPos + new Vector3(0f, crouchCameraYOffset, 0f);
-			}
-			else
-			{
-				firstPersonCameraTransform.localPosition = _origFpCamLocalPos;
-			}
-		}
-
-		private void ApplyCrouchToColliders (bool crouched)
-		{
-			if (_characterController)
-			{
-				if (crouched)
-				{
-					_characterController.height = _origControllerHeight * crouchHeightMultiplier;
-					_characterController.center = new Vector3(_origControllerCenter.x, _origControllerCenter.y * crouchHeightMultiplier, _origControllerCenter.z);
-				}
-				else
-				{
-					_characterController.height = _origControllerHeight;
-					_characterController.center = _origControllerCenter;
-				}
-				return;
-			}
-
-			var capsule = GetComponent<CapsuleCollider>();
-			if (capsule)
-			{
-				if (crouched)
-				{
-					capsule.height = _origCapsuleHeight * crouchHeightMultiplier;
-					capsule.center = new Vector3(_origCapsuleCenter.x, _origCapsuleCenter.y * crouchHeightMultiplier, _origCapsuleCenter.z);
-				}
-				else
-				{
-					capsule.height = _origCapsuleHeight;
-					capsule.center = _origCapsuleCenter;
-				}
-			}
-		}
-
-		private bool HasHeadroomToStand ()
-		{
-			if (_characterController)
-			{
-				float radius = _characterController.radius;
-				float standHeight = _origControllerHeight;
-				Vector3 centerWorld = Transform.TransformPoint(_origControllerCenter);
-				Vector3 up = UpDirection.normalized;
-				Vector3 bottom = centerWorld - up * (standHeight * 0.5f - radius);
-				Vector3 top = centerWorld + up * (standHeight * 0.5f - radius);
-				return !Physics.CheckCapsule(bottom, top, radius, ~0, QueryTriggerInteraction.Ignore);
-			}
-
-			var capsule = GetComponent<CapsuleCollider>();
-			if (capsule)
-			{
-				float radius = capsule.radius;
-				float standHeight = _origCapsuleHeight;
-				Vector3 centerWorld = Transform.TransformPoint(_origCapsuleCenter);
-				Vector3 up = UpDirection.normalized;
-				Vector3 bottom = centerWorld - up * (standHeight * 0.5f - radius);
-				Vector3 top = centerWorld + up * (standHeight * 0.5f - radius);
-				return !Physics.CheckCapsule(bottom, top, radius, ~0, QueryTriggerInteraction.Ignore);
-			}
-
-			return true;
-		}
-
-
-		#endregion
 	}
+	
 }

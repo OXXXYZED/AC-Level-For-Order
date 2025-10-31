@@ -6,148 +6,117 @@ using UnityEditor;
 
 namespace AC.Templates.MobileJoystick
 {
-
-	[DefaultExecutionOrder (-10)]
+	[DefaultExecutionOrder(-10)]
 	public class JoystickUI : MonoBehaviour
 	{
-
-		#region Variables
-
+		[SerializeField] private float cameraSensitivity = 0.18f;
+		[SerializeField] private float moveSensitivity = 1.35f;
 		private Canvas canvas = null;
-		[SerializeField] private Joystick playerJoystick = new Joystick ();
+		[SerializeField] private Joystick playerJoystick = new Joystick();
 		[SerializeField] private bool autoSetRunState = true;
 		private const string runAxis = "Run";
-		[SerializeField] private Joystick cameraJoystick = new Joystick ();
+		[SerializeField] private Joystick cameraJoystick = new Joystick();
 		[SerializeField] private Button[] buttons = new Button[0];
 		private GameCameraThirdPerson gameCameraThirdPerson;
 
-		#endregion
 
 
-		#region UnityStandards
+		private static float ShorterDim => Mathf.Min(ACScreen.width, ACScreen.height);
+		private static Vector2 NormalizeDrag(Vector2 drag) => (ShorterDim > 0f) ? (drag / (ShorterDim * 0.5f)) : drag;
 
-		private void Start ()
+		private void Start()
 		{
-			canvas = GetComponent<Canvas> ();
+			canvas = GetComponent<Canvas>();
 		}
 
-
-		private void OnEnable ()
+		private void OnEnable()
 		{
 			if (KickStarter.playerInput)
 			{
 				KickStarter.playerInput.InputGetAxisDelegate = InputGetAxis;
 				KickStarter.playerInput.InputGetButtonDelegate = InputGetButton;
 				KickStarter.playerInput.InputGetFreeAimDelegate = InputGetFreeAim;
-
 				KickStarter.playerInput.InputGetMouseButtonDownDelegate = InputGetMouseButtonDown;
 				KickStarter.playerInput.InputGetTouchPhaseDelegate = InputGetTouchPhase;
 			}
-
 			EventManager.OnSwitchCamera += OnSwitchCamera;
 		}
 
-
-		private void OnDisable ()
+		private void OnDisable()
 		{
 			if (KickStarter.playerInput)
 			{
 				KickStarter.playerInput.InputGetAxisDelegate = null;
 				KickStarter.playerInput.InputGetButtonDelegate = null;
 				KickStarter.playerInput.InputGetFreeAimDelegate = null;
-
 				KickStarter.playerInput.InputGetMouseButtonDownDelegate = null;
 				KickStarter.playerInput.InputGetTouchPhaseDelegate = null;
 			}
-
 			EventManager.OnSwitchCamera -= OnSwitchCamera;
 		}
 
-
-		private void Update ()
+		private void Update()
 		{
 			if (canvas)
 			{
-				playerJoystick.Update (this);
-				cameraJoystick.Update (this);
-
+				playerJoystick.Update(this);
+				cameraJoystick.Update(this);
 				for (int i = 0; i < buttons.Length; i++)
 				{
-					buttons[i].Update (this);
+					buttons[i].Update(this);
 				}
 			}
 		}
 
-
-		private void LateUpdate ()
+		private void LateUpdate()
 		{
 			if (canvas)
 			{
-				playerJoystick.LateUpdate ();
-				cameraJoystick.LateUpdate ();
+				playerJoystick.LateUpdate();
+				cameraJoystick.LateUpdate();
 			}
 		}
 
-		#endregion
-
-
-		#region PublicFunctions
-
-		public List<int> GetActiveFingerIDs ()
+		public List<int> GetActiveFingerIDs()
 		{
-			List<int> fingerIDs = new List<int> ();
-
-			if (playerJoystick.IsUsed) fingerIDs.Add (playerJoystick.FingerID);
-			if (cameraJoystick.IsUsed) fingerIDs.Add (cameraJoystick.FingerID);
-
+			List<int> fingerIDs = new List<int>();
+			if (playerJoystick.IsUsed) fingerIDs.Add(playerJoystick.FingerID);
+			if (cameraJoystick.IsUsed) fingerIDs.Add(cameraJoystick.FingerID);
 			for (int i = 0; i < buttons.Length; i++)
 			{
-				if (buttons[i].IsUsed) fingerIDs.Add (buttons[i].FingerID);
+				if (buttons[i].IsUsed) fingerIDs.Add(buttons[i].FingerID);
 			}
-
 			return fingerIDs;
 		}
 
-
 #if UNITY_EDITOR
-
-		public void ShowGUI ()
+		public void ShowGUI()
 		{
-			CustomGUILayout.BeginVertical ();
-			playerJoystick.ShowGUI ("Player joystick");
-			CustomGUILayout.EndVertical ();
-			autoSetRunState = EditorGUILayout.Toggle ("Auto-set 'run' state?", autoSetRunState);
-			EditorGUILayout.Space ();
-
-			CustomGUILayout.BeginVertical ();
-			cameraJoystick.ShowGUI ("Camera joystick");
-			CustomGUILayout.EndVertical ();
-
-			
-			EditorGUILayout.Space ();
-			CustomGUILayout.BeginVertical ();
+			CustomGUILayout.BeginVertical();
+			playerJoystick.ShowGUI("Player joystick");
+			CustomGUILayout.EndVertical();
+			autoSetRunState = EditorGUILayout.Toggle("Auto-set 'run' state?", autoSetRunState);
+			EditorGUILayout.Space();
+			CustomGUILayout.BeginVertical();
+			cameraJoystick.ShowGUI("Camera joystick");
+			CustomGUILayout.EndVertical();
+			EditorGUILayout.Space();
+			CustomGUILayout.BeginVertical();
 			int numButtons = buttons.Length;
-			numButtons = EditorGUILayout.DelayedIntField ("# of buttons:", numButtons);
-			if (numButtons != buttons.Length) ResizeButtonArray (numButtons);
-			EditorGUILayout.EndVertical ();
-
+			numButtons = EditorGUILayout.DelayedIntField("# of buttons:", numButtons);
+			if (numButtons != buttons.Length) ResizeButtonArray(numButtons);
+			EditorGUILayout.EndVertical();
 			for (int i = 0; i < buttons.Length; i++)
 			{
-				EditorGUILayout.Space ();
-				CustomGUILayout.BeginVertical ();
-				buttons[i].ShowGUI ("Button #" + i);
-				CustomGUILayout.EndVertical ();
+				EditorGUILayout.Space();
+				CustomGUILayout.BeginVertical();
+				buttons[i].ShowGUI("Button #" + i);
+				CustomGUILayout.EndVertical();
 			}
 		}
-
 #endif
 
-		#endregion
-
-
-		#region CustomEvents
-
-		private void OnSwitchCamera (_Camera fromCamera, _Camera toCamera, float transitionTime)
+		private void OnSwitchCamera(_Camera fromCamera, _Camera toCamera, float transitionTime)
 		{
 			gameCameraThirdPerson = toCamera as GameCameraThirdPerson;
 			if (gameCameraThirdPerson)
@@ -158,107 +127,89 @@ namespace AC.Templates.MobileJoystick
 			}
 		}
 
-		#endregion
-
-
-		#region PrivateFunctions
-
-		private void ResizeButtonArray (int newLength)
+		private void ResizeButtonArray(int newLength)
 		{
-			List<Button> buttonList = new List<Button> ();
-			for (int i = 0; i < Mathf.Min (newLength, buttons.Length); i++)
+			List<Button> buttonList = new List<Button>();
+			for (int i = 0; i < Mathf.Min(newLength, buttons.Length); i++)
 			{
 				if (i < buttons.Length)
 				{
-					buttonList.Add (buttons[i]);
+					buttonList.Add(buttons[i]);
 				}
 				else
 				{
-					buttonList.Add (new Button ());
+					buttonList.Add(new Button());
 				}
 			}
-
 			while (buttonList.Count < newLength)
 			{
-				buttonList.Add (new Button ());
+				buttonList.Add(new Button());
 			}
-
-			buttons = buttonList.ToArray ();
+			buttons = buttonList.ToArray();
 		}
 
-
-		private bool InputGetButton (string axis)
+		private bool InputGetButton(string axis)
 		{
-			if (axis == runAxis && autoSetRunState && !InvInstance.IsValid (KickStarter.runtimeInventory.SelectedInstance) && playerJoystick.IsUsed)
+			if (axis == runAxis && autoSetRunState && !InvInstance.IsValid(KickStarter.runtimeInventory.SelectedInstance) && playerJoystick.IsUsed)
 			{
-				return (playerJoystick.GetDragVector ().magnitude / ACScreen.LongestDimension) > KickStarter.settingsManager.dragRunThreshold;
+				return (playerJoystick.GetDragVector().magnitude / ACScreen.LongestDimension) > KickStarter.settingsManager.dragRunThreshold;
 			}
-
-			try { return Input.GetButton (axis); }
+			try { return Input.GetButton(axis); }
 			catch { return false; }
 		}
 
-
-		private float InputGetAxis (string axis)
+		private float InputGetAxis(string axis)
 		{
 			if (axis == cameraJoystick.horizontalAxis)
 			{
-				return cameraJoystick.GetDragVector ().x * cameraJoystick.EffectScaler;
+				var v = NormalizeDrag(cameraJoystick.GetDragVector()).x;
+				return Mathf.Clamp(v * cameraSensitivity * cameraJoystick.EffectScaler, -1f, 1f);
 			}
 			else if (axis == cameraJoystick.verticalAxis)
 			{
-				return cameraJoystick.GetDragVector ().y * cameraJoystick.EffectScaler;
+				var v = NormalizeDrag(cameraJoystick.GetDragVector()).y;
+				return Mathf.Clamp(v * cameraSensitivity * cameraJoystick.EffectScaler, -1f, 1f);
 			}
 			else if (axis == playerJoystick.horizontalAxis)
 			{
-				return playerJoystick.GetDragVector ().x * playerJoystick.EffectScaler;
+				var v = NormalizeDrag(playerJoystick.GetDragVector()).x;
+				return Mathf.Clamp(v * moveSensitivity * playerJoystick.EffectScaler, -1f, 1f);
 			}
 			else if (axis == playerJoystick.verticalAxis)
 			{
-				return playerJoystick.GetDragVector ().y * playerJoystick.EffectScaler;
+				var v = NormalizeDrag(playerJoystick.GetDragVector()).y;
+				return Mathf.Clamp(v * moveSensitivity * playerJoystick.EffectScaler, -1f, 1f);
 			}
-
-			try { return Input.GetAxis (axis); }
+			try { return Input.GetAxis(axis); }
 			catch { return 0f; }
 		}
 
-
-		private Vector2 InputGetFreeAim (bool cursorIsLocked)
+		private Vector2 InputGetFreeAim(bool cursorIsLocked)
 		{
-			return 0.01f * cameraJoystick.EffectScaler * cameraJoystick.GetDragVector ();
+			var n = NormalizeDrag(cameraJoystick.GetDragVector());
+			return n * (cameraSensitivity * cameraJoystick.EffectScaler);
 		}
 
-
-		private bool InputGetMouseButtonDown (int button)
+		private bool InputGetMouseButtonDown(int button)
 		{
 			if (playerJoystick.IsUsed || cameraJoystick.IsUsed)
 			{
 				return false;
 			}
-			return Input.GetMouseButtonDown (button);
+			return Input.GetMouseButtonDown(button);
 		}
 
-
-		private TouchPhase InputGetTouchPhase (int index)
+		private TouchPhase InputGetTouchPhase(int index)
 		{
 			if (playerJoystick.IsUsed || cameraJoystick.IsUsed)
 			{
 				return TouchPhase.Canceled;
 			}
-			return Input.GetTouch (index).phase;
+			return Input.GetTouch(index).phase;
 		}
-
-		#endregion
-
-
-		#region GetSet
 
 		public Joystick PlayerJoystick { get { return playerJoystick; } }
 		public Joystick CameraJoystick { get { return cameraJoystick; } }
-		public Canvas Canvas { get { return canvas; }}
-
-		#endregion
-
+		public Canvas Canvas { get { return canvas; } }
 	}
-
 }

@@ -1,0 +1,10 @@
+# ninja log v5
+1	811	1761912660893934763	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	8decdb8810d7b1df
+1	814	1761912660894007099	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	6a7845c419429810
+2	815	1761912660892937233	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	26ebbad50446a566
+3	850	1761912660934758196	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	5b0bbb2d62533b0a
+1	869	1761912660954778463	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	9715d40f0372d97e
+3	893	1761912660979078234	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	3c4e0666613e3ff7
+2	908	1761912660993864969	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	738b27089f76c4a5
+0	959	1761912661042296380	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	d1a1102d1911f861
+960	1089	1761912661174029082	/Users/elbeksattorov/Documents/AC-Level-For-Order/HorrorQuest/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/Debug/53353d1n/obj/arm64-v8a/libgame.so	fd441d89f1826b8

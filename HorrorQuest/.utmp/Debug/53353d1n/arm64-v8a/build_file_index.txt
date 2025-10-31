@@ -1,0 +1,2 @@
+/Users/elbeksattorov/Documents/AC-Level-For-Order/HorrorQuest/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/src/main/cpp/CMakeLists.txt
+/Users/elbeksattorov/Documents/AC-Level-For-Order/HorrorQuest/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/src/main/cpp/GameActivity/CMakeLists.txt

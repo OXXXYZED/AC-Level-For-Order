@@ -562,11 +562,11 @@ MonoBehaviour:
       maxAngle: 315
     isUpgraded: 1
   angleSnapping: 0
-  walkSpeedScale: 1.6
+  walkSpeedScale: 4
   runSpeedScale: 4
   reverseSpeedFactor: 1
   canRunInReverse: 1
-  turnSpeed: 2.7
+  turnSpeed: 100
   acceleration: 2.5
   deceleration: 7
   turnBeforeWalking: 0
@@ -597,7 +597,7 @@ MonoBehaviour:
   headTurnTargetOffset: {x: 0, y: 0, z: 0}
   headFacing: 0
   ikHeadTurning: 0
-  headTurnSpeed: 4
+  headTurnSpeed: 20
   moveOutOfPlayersWay: 0
   minPlayerDistance: 1
   jumpAnim: {fileID: 0}
@@ -613,12 +613,6 @@ MonoBehaviour:
   freeAimLocked: 0
   jumpingLocked: 0
   autoStickToNavMesh: 0
-  crouchEnabled: 1
-  crouchIsToggle: 1
-  crouchSpeedMultiplier: 0.5
-  crouchHeightMultiplier: 0.6
-  crouchAnimatorBool: Crouch
-  crouchCameraYOffset: -0.35
 --- !u!143 &143323952110608712
 CharacterController:
   m_ObjectHideFlags: 0
