@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eef0291658894a26a767144fa659273, type: 3}
+  m_Name: Template_InputSystem
+  m_EditorClassIdentifier: 
+  exampleScenes: []
+  previewTexture: {fileID: 2800000, guid: 74a7bb26b502e40f98d21c243f037106, type: 3}
+  inputActionsAsset: {fileID: -944628639613478452, guid: 26fc5baf8fd7644bb8da6ecbd18340b6,
+    type: 3}
+  menuManager: {fileID: 11400000, guid: 7077f6858e9e148358ad7910e4cac56d, type: 2}

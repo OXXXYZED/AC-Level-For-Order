@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4a24d0e4a28423fb3249b923d7e418, type: 3}
+  m_Name: HorrorQuest_ManagerPackage
+  m_EditorClassIdentifier: AC::AC.ManagerPackage
+  actionsManager: {fileID: 11400000, guid: c0d778ec37f55438d92d3a1c33abee8f, type: 2}
+  sceneManager: {fileID: 11400000, guid: cefbc313a2401414e810ed80c8839f85, type: 2}
+  settingsManager: {fileID: 11400000, guid: 2c31a9d62f64645e4947143bd1da40ec, type: 2}
+  inventoryManager: {fileID: 11400000, guid: 66e7ae3e70138485aa0451ed5b8b7d4d, type: 2}
+  variablesManager: {fileID: 11400000, guid: e3d6e8eb8250e473480dce3763b6107c, type: 2}
+  speechManager: {fileID: 11400000, guid: df2a851e7f4444a39b34909a8ef14bb1, type: 2}
+  cursorManager: {fileID: 11400000, guid: 29a91313c4750442bbf40b82fcb16b93, type: 2}
+  menuManager: {fileID: 11400000, guid: f4508523a828246978c172386750cb8e, type: 2}

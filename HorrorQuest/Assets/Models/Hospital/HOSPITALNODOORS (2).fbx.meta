@@ -1,0 +1,312 @@
+fileFormatVersion: 2
+guid: 1d2814634f938de4c8679213e9ffbc08
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BETON
+    second: {fileID: 2100000, guid: 1c9f1376bbda4914ab5a72d6e278f5a4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BLOODWALL
+    second: {fileID: 2100000, guid: 9e9f3efa3e4aa3c4bbfd71d64446827a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BOLT.004
+    second: {fileID: 2100000, guid: e1496cef6fd00ef419816ffa6e7efd3f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: KOROBKA(CORPSE).001
+    second: {fileID: 2100000, guid: b57e878fd5e592948a83970d44b498bf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: KRAN(BALON)
+    second: {fileID: 2100000, guid: 87f391ebd5545f44cbce74658a8eb08a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.008
+    second: {fileID: 2100000, guid: 19937a97882de7f49a7456e87b4e521f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.020
+    second: {fileID: 2100000, guid: aaf2082adecca04499214e1676bfd239, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: NOTEXTURE
+    second: {fileID: 2100000, guid: c62fc40644ee2d84bb19edd17aead7dd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OPERACIONNASTENY
+    second: {fileID: 2100000, guid: a8b33fc2996e8654ba24fc785e1ea78a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OPERACIONNASTENY(BIG)
+    second: {fileID: 2100000, guid: 95aac41a8e4ac2c4fa897e4190d9adc6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OPERACIONNASTENY(BLLOD)
+    second: {fileID: 2100000, guid: 6a1e613478eb6a341a94944b96150428, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OPERACIONNASTENY(UP)
+    second: {fileID: 2100000, guid: 0489383a39614484ab66debb5aa04d73, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OPERCAIONNASTENY(BLLOD2)
+    second: {fileID: 2100000, guid: 2c894bfbbcc2a7b4a823ddfa8c3835c3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: POL
+    second: {fileID: 2100000, guid: 78e3f298de9345643b6e7849def9ebea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: POL(BLOOD)
+    second: {fileID: 2100000, guid: ab1b21761e6876742b4e2a5bd31f7eca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: POL.001
+    second: {fileID: 2100000, guid: 023e8f3b5dc1788459c846cd6614b165, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: POL.002
+    second: {fileID: 2100000, guid: 9463d99af8c5d41449f316a057139b7c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: STEKLO
+    second: {fileID: 2100000, guid: 1c5ef5c58538d4043b19ef112b152996, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: STENY(PALATA)
+    second: {fileID: 2100000, guid: 00600a41d0792e140b6585dab7ada12e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: STENY(VHOD)
+    second: {fileID: 2100000, guid: 281e8f2cf29e97e4585eaed95cd42df1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: STENY(koridor)
+    second: {fileID: 2100000, guid: 65353124f7a276441992f1d1ffac21f3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: VENT(test)
+    second: {fileID: 2100000, guid: 013480ebb9b6fe04c96971e9544f0416, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 1672899674_grizly-club-p-tekstura-starogo-metalla-32
+    second: {fileID: 2800000, guid: 4b31d8cbe86f2aa42839ccc66270cb32, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 3223896427_eda83ca1ef_b
+    second: {fileID: 2800000, guid: 66d050d28a5868744beb56978a6cf001, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 553ac821b5ef1d4b8739c5d1f08a789d
+    second: {fileID: 2800000, guid: 8cb7e0363497cdc4aaa7333001f27ec6, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 5899e3813b02e721788c63bc29a6a270
+    second: {fileID: 2800000, guid: 94ae518641e4d7d4f9fda773b35b91ba, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 8497451313_cabf48b29b_b
+    second: {fileID: 2800000, guid: 60d23feded1e18e4683091e3528d0550, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 901303043a1acb66c0ea61f7b4e866e3
+    second: {fileID: 2800000, guid: 622f837d1d1211b48af2198adae50eeb, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: BLOODWALL
+    second: {fileID: 2800000, guid: bbc4b9b48f5500545afa0e93e78b4d04, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: GRAFITYWALL
+    second: {fileID: 2800000, guid: 6136158d19bca824ea70cd10a02f42b6, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: KAFEL
+    second: {fileID: 2800000, guid: a10b2a10fc991b8459ad827a8de293fc, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: KAFELBLOOD1
+    second: {fileID: 2800000, guid: 6d3bf1e19a680f34789fbbaddd89f217, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: MetalPlatesDucts0021_1_600
+    second: {fileID: 2800000, guid: 05d6517d37bd3524aa11b15faea997e3, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3B4ODc2MjM2LWltYWdlLWpvYjYzMC1hXzEuanBn
+    second: {fileID: 2800000, guid: ddfcf015531454a4f8eeb00bef65c89a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: f24b9e38f891142ee8594cf3cd4a4360
+    second: {fileID: 2800000, guid: 8a5ef94e0670b3943a4562e0a776d3ae, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: pattern_1980x1200
+    second: {fileID: 2800000, guid: 2f9980fc956e0ef4698f5dd2c0e93b9a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: pattern_800x1024
+    second: {fileID: 2800000, guid: 09c5571ee83aae54c87c23df49710092, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: pattern_800x600 (1)
+    second: {fileID: 2800000, guid: 4d72482239df7444b96ddc4a9f96d0eb, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: photo_2025-10-18_11-48-13
+    second: {fileID: 2800000, guid: 3ba690fbe9d90cc4a96f541d01d72138, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: screen-6
+    second: {fileID: 2800000, guid: b8732de3060119644ba3ded2b5e95c84, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: zvr0xbkekcirx75849q5och544krfilq
+    second: {fileID: 2800000, guid: 16011b2ea575c6944ae44fc8fde46cfa, type: 3}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
